@@ -18,6 +18,7 @@ bun run check
 ```
 
 `bun run check` runs Biome, TypeScript 7 (`tsc`, the Go-based compiler), and Bun tests.
+`bun test` requires `nvim` (0.10+) on `PATH` to run the integration test suite.
 
 ## Releasing
 

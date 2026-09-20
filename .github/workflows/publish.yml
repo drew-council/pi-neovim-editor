@@ -20,6 +20,10 @@ jobs:
           package-manager-cache: false
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
       - run: bun run check
       - name: Verify release tag
         run: test "${GITHUB_REF_NAME#v}" = "$(node -p "require('./package.json').version")"

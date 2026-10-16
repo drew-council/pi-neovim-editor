@@ -45,19 +45,25 @@ function literalInput(value: string): string {
   return value.replaceAll("<", "<LT>");
 }
 
+function isPrintable(value: string): boolean {
+  return [...value].every((character) => character >= " " && character !== "\x7f");
+}
+
 /** Translate one Pi TUI input event into nvim_input() key notation. */
 export function toNeovimInput(data: string): string | undefined {
   if (!data || isKeyRelease(data)) return undefined;
 
+  // Kitty reports Shift+Backspace as codepoint 127, which pi-tui decodes as a
+  // literal DEL. Let parseKey() handle those as keys instead of text.
   const kittyPrintable = decodeKittyPrintable(data);
-  if (kittyPrintable !== undefined) return literalInput(kittyPrintable);
-  if ([...data].every((character) => character >= " " && character !== "\x7f")) return literalInput(data);
+  if (kittyPrintable !== undefined && isPrintable(kittyPrintable)) return literalInput(kittyPrintable);
+  if (isPrintable(data)) return literalInput(data);
 
   const parsed = parseKey(data);
   if (!parsed) {
     // Pi may deliver several printable characters together. Preserve those,
     // but never forward unknown escape/control sequences as text.
-    return [...data].every((character) => character >= " " && character !== "\x7f") ? literalInput(data) : undefined;
+    return isPrintable(data) ? literalInput(data) : undefined;
   }
 
   const parts = parsed.split("+");

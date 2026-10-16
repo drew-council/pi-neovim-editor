@@ -1,6 +1,6 @@
 {
   "name": "@bizmyth/pi-neovim-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Embedded Neovim as the Pi coding agent prompt editor",
   "type": "module",
   "license": "MIT",
